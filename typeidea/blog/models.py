@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.shortcuts import get_object_or_404
 
 
 class Category(models.Model):
@@ -21,6 +22,22 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def get_navs(cls):
+        categories = cls.objects.filter(status=cls.STATUS_NORMAL)
+        nav_categories = []
+        normal_categories = []
+        for cate in categories:
+            if cate.is_nav:
+                nav_categories.append(cate)
+            else:
+                normal_categories.append(cate)
+                
+        return {
+            'navs':nav_categories,
+            'categories':normal_categories,
+        }
 
 
 class Tag(models.Model):
@@ -61,6 +78,8 @@ class Post(models.Model):
     tag = models.ManyToManyField(Tag, verbose_name="标签")
     owner = models.ForeignKey(User, verbose_name="作者")
     created_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
+    pv = models.PositiveIntegerField(default=1)
+    uv = models.PositiveIntegerField(default=1)
 
     class Meta:
         verbose_name = verbose_name_plural = "文章"
@@ -68,5 +87,28 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    @classmethod
+    def hot_posts(cls):
+        return cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-pv')
+    
+    @staticmethod
+    def get_by_tag(tag_id):
+        tag = get_object_or_404(Tag,pk=tag_id)
+        post_list = tag.post_set.filter(status=Post.STATUS_NORMAL).select_related('owner','category')
+        return post_list,tag
+
+    @staticmethod
+    def get_by_category(category_id):
+        category = get_object_or_404(Category,pk=category_id)
+        post_list = category.post_set.filter(status=Post.STATUS_NORMAL).select_related('owner','category')
+        return post_list,category
+
+    @classmethod
+    def latest_posts(cls):
+        queryset = cls.objects.filter(status=cls.STATUS_NORMAL).select_related('owner','category')
+        return queryset
+    
+
 
 
