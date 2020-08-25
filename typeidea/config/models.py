@@ -11,7 +11,7 @@ class Link(models.Model):
         (STATUS_DELETE, '删除'),
     )
     title = models.CharField(max_length=50, verbose_name="标题")
-    href = models.URLField(verbose_name="链接")  # 默认长度200
+    href = models.URLField(verbose_name="链接")  
     status = models.PositiveIntegerField(default=STATUS_NORMAL, choices=STATUS_ITEMS, verbose_name="状态")
     weight = models.PositiveIntegerField(default=1, choices=zip(range(1, 6), range(1, 6)),
                                          verbose_name="权重",
@@ -76,17 +76,17 @@ class SideBar(models.Model):
             result = self.content
         elif self.display_type == self.DISPLAY_LATEST:
             context = {
-                'posts':Post.latest_posts()
+                'posts':Post.latest_posts()[:5]
             }
             result = render_to_string('config/blocks/sidebar_posts.html',context)
         elif self.display_type == self.DISPLAY_HOT:
             context = {
-                'posts':Post.hot_posts()
+                'posts':Post.hot_posts()[:5]
             }
             result = render_to_string('config/blocks/sidebar_posts.html',context)
         elif self.display_type == self.DISPLAY_COMMENT:
             context = {
-                'comments':Comment.objects.filter(status=Comment.STATUS_NORMAL)
+                'comments':Comment.objects.filter(status=Comment.STATUS_NORMAL)[:3]
             }
             result = render_to_string('config/blocks/sidebar_comments.html',context)
         return result

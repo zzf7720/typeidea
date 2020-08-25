@@ -5,34 +5,42 @@
     <meta charset="utf-8">
     <title>{% block title %}首页{% endblock %}- typeidea博客系统</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
     <style>
     .post {
         margin-bottom: 5px;
     }
-    </style>
+    </style> 
   </head>
   <body>
 	<div class="container head">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <a class="navbar-brand" href="/">首页</a>
+        <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+          <a class="navbar-nav" href="/"><span class="glyphicon glyphicon-home"></span> 首页</a>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
+            <ul class="navbar-nav">
             {% for cate in navs %}
+              {% if cate == category %}
               <li class="nav-item">
-                  <a class="nav-link" href="{% url 'category-list' cate.id %}">{{ cate.name }}</a>
+                  <a class="nav-link active" href="{% url 'category-list' cate.id %}">{{ cate.name }}</a>
               </li>
+              {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'category-list' cate.id %}">{{ cate.name }}</a>
+            </li>
+              {% endif %}
             {% endfor %}
             </ul>
-            <form class="form-inline my-2 my-lg-0" action='GET'>
-              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <form class="form-inline my-2 my-lg-0" action='/search/' method="GET">
+              <input class="form-control mr-sm-2" type="search" name="keyword" placeholder="Search" aria-label="Search" value="{{ keyword }}">
               <button class="btn btn-outline-success" type="submit">搜索</button>
             </form>
           </div>
         </nav>
         <div class="jumbotron">
-            <h1 class="display-4">Typeidea</h1>
-            <p class="lead">基于Django的多人博客系统</p>
+          <h1 class="display-4">Typeidea</h1>
+          <p class="lead">基于Django的多人博客系统</p>          
         </div>
 	</div>
 	<div class="container main">
@@ -59,9 +67,11 @@
     </div>
 
     <footer class="footer">
+      
         {% block footer %}
         <div class="container">
             <hr/>
+            <p>其他分类：</p>
             <nav class="nav category">
             {% for cate in categories %}
             <a href="{% url 'category-list' cate.id %}" class="nav-link">{{ cate.name }}</a>
@@ -69,7 +79,7 @@
             </nav>
         </div>
         <div class="container power">
-            <span class="text-muted">Power by Typeidea@the5fire</span>
+            <span class="text-muted">Power by Typeidea@z</span>
         </div>
         {% endblock %}
     </footer>
