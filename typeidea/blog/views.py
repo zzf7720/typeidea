@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q,F
 from django.shortcuts import render,get_object_or_404
 from django.views.generic import ListView,DetailView
 
@@ -67,7 +67,10 @@ class PostDetailView(CommonViewMixin,DetailView):
     context_object_name = 'post'
     pk_url_kwarg = 'post_id'
 
-
+    def get(self,request,*args,**kwargs):
+        response = super().get(request,*args,**kwargs)
+        Post.objects.filter(pk=self.object.id).update(pv=F('pv')+1,uv=F('uv')+1)
+        return response
 
 
 class SearchView(IndexView):
