@@ -67,7 +67,7 @@ class SideBar(models.Model):
 
     @property
     def content_html(self):
-        from blog.models import Post
+        from blog.models import Post 
         from comment.models import Comment
 
 

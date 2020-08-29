@@ -1,8 +1,11 @@
 from django.conf.urls import url
 from django.contrib import admin
+from django.contrib.sitemaps import views as sitemap_views
 
 from .custom_site import custom_site
 from blog.views import IndexView,CategoryView,TagView,PostDetailView,SearchView,AuthorView
+from blog.rss import LatestPostFeed
+from blog.sitemap import PostSitemap
 from config.views import LinkListView
 from comment.views import CommentView
 
@@ -18,4 +21,6 @@ urlpatterns = [
     url(r'^post/(?P<post_id>\d+)$', PostDetailView.as_view(), name='post-detail'),
     url(r'^super_admin/', admin.site.urls, name='super-admin'),
     url(r'^admin/', custom_site.urls, name='admin'),
+    url(r'^rss|feed/', LatestPostFeed(), name='rss'),
+    url(r'^sitemap\.xml$', sitemap_views.sitemap, {'sitemaps': {'posts': PostSitemap}},name='sitemap'),
 ]

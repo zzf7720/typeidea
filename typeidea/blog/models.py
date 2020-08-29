@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.shortcuts import get_object_or_404
+from django.utils.functional import cached_property
 
 import mistune
 
@@ -116,6 +117,9 @@ class Post(models.Model):
         queryset = cls.objects.filter(status=cls.STATUS_NORMAL).select_related('owner','category')
         return queryset
     
+    @cached_property
+    def tags(self):
+        return ','.join(self.tag.values_list('name',flat=True))
 
 
 

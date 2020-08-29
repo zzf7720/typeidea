@@ -64,7 +64,7 @@ class PostAdmin(BaseOwnerAdmin):
     save_on_top = True
 
     actions_on_top = True
-    actions_on_bottom = True
+    # actions_on_bottom = True
 
     # 编辑页面
     save_on_top = True
@@ -99,7 +99,7 @@ class PostAdmin(BaseOwnerAdmin):
         })
     )
     # filter_horizontal = ('tag', )
-    filter_vertical = ('tag', )
+    filter_horizontal = ('tag', )
 
     def operator(self, obj):
         return format_html(
